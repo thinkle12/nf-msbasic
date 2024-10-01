@@ -18,11 +18,9 @@ process runMSconvert {
     println(raw_file)
     // Set the volume mount dynamically in the Docker command
     """
-    wine msconvert ${raw_file}
+    wine msconvert ${raw_file} --outfile "${raw_file.simpleName}.tmp.mzML"
     sleep 5
-    echo "msconvert finished, checking to make sure file is no longer being accessed"
-    echo "${raw_file.simpleName}.mzML"
-    while lsof | grep "${raw_file.simpleName}.mzML"; do sleep 5; done
-    echo "File is no longer being accessed"
+    mv "${raw_file.simpleName}.tmp.mzML" "${raw_file.simpleName}.mzML"
+    sleep 5
     """
 }
